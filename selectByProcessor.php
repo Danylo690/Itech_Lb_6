@@ -8,41 +8,34 @@
 </head>
 <body>
     <table border="1">
-        <tr>
-            <td>Inventory number</td>
-            <td>Year</td>
-            <td>Guarantee</td>
-            <td>Processor</td>
-            <td>Memory</td>
-            <td>HDD</td>
-            <td>PO</td>
-        </tr>
         <?php
 
 use function MongoDB\is_string_array;
-
             include "connection.php";
+            $Table = "<tr><td>Inventory number</td><td>Year</td><td>Guarantee</td><td>Processor</td><td>Memory</td><td>HDD</td><td>PO</td></tr>";
             $Processor = $_POST['Processor'];
             $find = $tbl->find(["Processor" => $Processor],["projection" => ["_id" => 0]]);
             foreach($find as $result)
             {
-                print "<tr>";
+                $Table = $Table."<tr>";
                 foreach($result as $coll)
                 {
                     if(is_object($coll))
                     {
-                        print "<td>";
+                        $Table = $Table."<td>";
                         foreach($coll as $po)
                         {
-                            print "$po || ";
+                            $Table = $Table."$po || ";
                         }
-                        print "</td>";
+                        $Table = $Table."</td>";
                         break;
                     }
-                    print "<td> $coll </td>";
+                    $Table = $Table."<td> $coll </td>";
                 }
-                print "</tr>";
+                $Table = $Table."</tr>";
             }
+            print $Table;
+            print "<script>localStorage.setItem('$Processor','$Table')</script>";
         ?>
     </table>
 </body>
